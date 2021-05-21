@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{% block title %} Rendez-vous{% endblock %}
+
+{% block body %}
+    <script src="{{ asset("assets/js/rdvLoader.js") }}"></script>
+<div style="margin-top: 100px;width: 100%;padding-left: 30%">
+    <table><tr>
+    <td><input type="text" name="name" style="width: 400px" class="form-control" id="idInput" placeholder="Entrer votre identifiant" required></td>
+        <td><button onclick="getRndv()" type="button" class="btn btn-success">Chercher</button></td>
+        </tr> </table>
+    <div class="my-3">
+        <div class="error-message btn-danger" id="errorMessage" style="pointer-events:none;display:none;text-align:center;color: white;border-radius: 20px;width: 400px;padding: 10px"></div>
+    </div>
+</div>
+    <div style="margin-top:70px;width: 100%;padding: 20px">
+    {% if rdvList is null or rdvList|length == 0%}
+        {% if show == 1 %}
+    {% if type == 'coach' %}
+        <div style="width: 100%;text-align:center;color: black;font-size:30px;border-radius: 20px;padding: 10px">
+            Pas de rendez-vous à afficher pour l'instant
+        </div>
+    {% else %}
+        <div style="width: 100%;text-align:center;color: black;font-size:30px;border-radius: 20px;padding: 10px">
+            Pas de rendez-vous à afficher pour cet utilisateur<br><br>
+            <a href="/addRdv/{{ user.idUtilisateur }}"><input type="button" style="color:white" class="btn btn-info" value="Ajouter rendez-vous"/></a>
+        </div>
+    {% endif %}
+    {% endif %}
+    {% else %}
+    <div>
+        <div style="margin-bottom: 40px;font-weight: bolder;font-size: 30px">
+
+            {% if type == 'coach' %}
+                Coach <b>{{ user.fullName }}</b><br><br>
+                Vous avez <b>{{ rdvList|length }}</b> rendez-vous :
+            {% else %}
+                Les rendez-vous de: {{ user.fullName}}
+            {% endif %}
+
+            {% if type != 'coach' %}
+            <div style="float: right">
+                <a href="/addRdv/{{ user.idUtilisateur }}"><button class="btn btn-success" title="Ajouter rendez-vous" style="margin-right:20px;border-radius:8px;width: 40px;font-size: 17px"><i class="fa fa-plus-circle"></i></button></a>
+            </div>
+            {% else %}
+
+                <div style="float: right">
+                    <button onclick="exportCSV({{ user.idUtilisateur }})" id="exportButton" class="btn btn-outline-warning" title="Exporter la liste des rendez-vous" style="margin-right:20px;border-radius:8px;width: 40px;font-size: 17px"><i class="fa fa-file-excel-o"></i></button></a>
+                </div>
+            {% endif %}
+        </div>
+        <table id="datatables-reponsive" class="table table-striped" style="width:100%">
+            <thead>
+            <tr>
+                <th style="text-align: center">{% if type != "coach" %}Nom de coach{% else %} Nom de client {% endif %}</th>
+                <th style="text-align: center">Email</th>
+                <th style="text-align: center">date rendez-vous</th>
+                <th style="text-align: center">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for rdv in rdvList %}
+            <tr>
+                <td style="text-align: center">{% if type != "coach" %}{{ rdv[0].idCoach.fullName }}{% else %} {{ rdv[1].fullName}} {% endif %}</td>
+                <td style="text-align: center">{{ rdv[0].email}}</td>
+                <td style="text-align: center">{{ rdv[0].date}}</td>
+                <td style="text-align: center">
+                    <a href="/updateRdv/{{ rdv[0].id }}/{{ user.idUtilisateur }}"><button style="color: white;margin-right:20px;border-radius:8px;width: 40px" class="btn btn-info" title="Modifier"><i class="fa fa-edit"></i></button></a>
+                    <a href="/deleteRdv/{{ rdv[0].id }}/{{ user.idUtilisateur }}"><button class="btn btn-danger" style="border-radius:8px;width: 40px" title="{% if type != "coach" %}Supprimer le rendez-vous{% else %}Annuler le rendez-vous{% endif %}">{% if type != "coach" %}<i class="fa fa-trash"></i>{% else %}<i class="fa fa-ban"></i>{% endif %}</button></a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+    {% endif %}
+    </div>
+{% endblock %}

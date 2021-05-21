@@ -1,0 +1,13 @@
+
+{% if status == "user" %}
+<h2>Bonjour {{ userName }},</h2>
+<p>Votre rendez-vous est mis en place au <b>{{ date }}</b> avec Mr.<b>{{ coachName }}</b>.<br><br>
+    <b>Email du coach: </b>{{ coachEmail }}
+    {% else %}]
+
+<h2>Bonjour {{ coachName }},</h2>
+
+<p>Votre avez un nouveau rendez-vous au <b>{{ date }}</b> avec Mr.<b>{{ userName }}</b>.<br><br>
+    <b>Email du client: </b>{{ userEmail }}
+    {% endif %}
+</p>

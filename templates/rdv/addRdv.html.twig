@@ -1,0 +1,104 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ajouter Render-vous{% endblock %}
+
+{% block body %}
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Lato:300,400,700&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/rdv/calendar.css') }}">
+
+    <script>
+        var reservedDates = {{ dates|json_encode|raw }}
+    </script>
+    <script src="{{ asset('js/popper.js') }}"></script>
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/calendar.js')}}"></script>
+
+
+    <div style="margin-top: -10px;width: 100%;padding: 40px">
+<table style="width: 100%"><tr>
+    <td style="width: 30%">
+    {{ form_start(form) }}
+        <div style="padding-top: 50%">
+            <div style="{% if user.type == 'coach' %}display: none{% endif %}">
+        <label>Coachs:</label>
+        {{ form_widget(form.idCoach,{'attr':{'class' : 'form-control'}}) }}
+            </div>
+        <div style="display: none">
+        {{ form_widget(form.date) }}
+
+        </div>
+        </div>
+    <div style="margin-top:25%">
+
+        <div style="height: 50px;margin-bottom: 20px;font-weight:bolder;font-size: 17px;color:#dc3545" >
+            <span style="display:none" id="errorMessage">Veuillez choisir une date.</span>
+        </div>
+        {{ form_widget(form.Sauvegarder)}}
+        <a href="/rendezvous/{{ user.idUtilisateur }}"><input type="button" value="cancel" class="btn btn-danger"/></a>
+    </div>
+
+        {{ form_end(form) }}
+  </td>
+    <td>
+    <div id="availableDates">
+        <section class="ftco-section">
+            <div class="container">
+                <h3>Calendrier de Mr. <b id="coachName"></b> : </h3><br>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="calendar-section">
+                            <div class="row no-gutters">
+                                <div class="col-md-6">
+                                    <div class="calendar calendar-first" id="calendar_first">
+                                        <div class="calendar_header">
+                                            <button class="switch-month switch-left">
+                                                <i class="fa fa-chevron-left"></i>
+                                            </button>
+                                            <h2></h2>
+                                            <button class="switch-month switch-right">
+                                                <i class="fa fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="calendar_weekdays"></div>
+                                        <div class="calendar_content"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="calendar calendar-second" id="calendar_second">
+                                        <div class="calendar_header">
+                                            <button class="switch-month switch-left">
+                                                <i class="fa fa-chevron-left"></i>
+                                            </button>
+                                            <h2></h2>
+                                            <button class="switch-month switch-right">
+                                                <i class="fa fa-chevron-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="calendar_weekdays"></div>
+                                        <div class="calendar_content"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+        <div style="margin-top: -100px">
+    <table>
+           <tr><td> <div style="width: 20px;height: 20px;border-radius: 20px;background-color: #dc3545;margin-right: 20px"></div></td><td>Date occupée</td></tr>
+
+        {% if rdv.date is not null %}
+        <tr><td><div style="width: 20px;height: 20px;border-radius: 20px;background-color: #bd83ce;margin-right: 20px"></div></td><td>Date actuelle</td></tr>
+        {% endif %}
+
+    </table>
+        </div>
+    </td>
+    </tr></table>
+    </div>
+{% endblock %}
